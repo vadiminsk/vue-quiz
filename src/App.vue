@@ -3,9 +3,18 @@
     <app-question
       v-if="questionsAnswered < questions.length"
       :questions="questions"
+      :questionsAnswered="questionsAnswered"
+      @question-answered="questionAnswered"
     />
-    <app-result v-else />
-    <button type="button" class="reset-btn">Reset</button>
+    <app-result v-else :results="results" :totalCorrect="totalCorrect" />
+    <button
+      v-if="questionsAnswered === questions.length"
+      type="button"
+      class="reset-btn"
+      @click.prevent="resetQuiz"
+    >
+      Reset
+    </button>
   </div>
 </template>
 
@@ -23,6 +32,7 @@ export default {
   data() {
     return {
       questionsAnswered: 0,
+      totalCorrect: 0,
       questions: [
         {
           q: 'What is 2 + 2?',
@@ -99,6 +109,20 @@ export default {
         },
       ],
     };
+  },
+
+  methods: {
+    questionAnswered(is_correct) {
+      if (is_correct) {
+        this.totalCorrect++;
+      }
+
+      this.questionsAnswered++;
+    },
+    resetQuiz() {
+      this.questionsAnswered = 0;
+      this.totalCorrect = 0;
+    },
   },
 };
 </script>
